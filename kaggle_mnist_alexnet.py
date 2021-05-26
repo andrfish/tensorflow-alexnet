@@ -67,24 +67,24 @@ def train():
     for epoch in range(FLAGS.training_epoch):
         epoch_start_time = time.time()
         
-        overall_loss = 0.0
+        overall_accuracy = 0.0
         for start, end in train_range:
             batch_start_time = time.time()
             train_x = train_images[start:end]
             train_y = train_labels[start:end]
             if i % 20 == 0:
-                summary, _, loss_result = sess.run([merged, train, loss], feed_dict={inputs: train_x, labels: train_y,
+                summary, accuracy_result, loss_result = sess.run([merged, train, loss], feed_dict={inputs: train_x, labels: train_y,
                                                                                      dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                                      learning_rate: cur_learning_rate})
                 train_writer.add_summary(summary, i)
             else:
-                _, loss_result = sess.run([train, loss], feed_dict={inputs: train_x, labels: train_y,
+                accuracy_result, loss_result = sess.run([train, loss], feed_dict={inputs: train_x, labels: train_y,
                                                                     dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                     learning_rate: cur_learning_rate})
             #print('[%s][training][epoch %d, step %d exec %.2f seconds] [file: %5d ~ %5d / %5d] loss : %3.10f' % (
             #    time.strftime("%Y-%m-%d %H:%M:%S"), epoch, i, (time.time() - batch_start_time), start, end,
             #    total_train_len, loss_result))
-            overall_loss += loss_result
+            overall_accuracy += accuracy_result
 
             if i % FLAGS.validation_interval == 0 and i > 0:
                 validation_start_time = time.time()
@@ -101,8 +101,8 @@ def train():
 
             i += 1
 
-        overall_loss /= len(train_range)
-        print("[%s][epoch exec %s seconds] epoch : %d, loss: %3.10f" % (
+        overall_accuracy /= len(train_range)
+        print("[%s][epoch exec %s seconds] epoch : %d, accuracy: %3.10f" % (
             time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch, overall_loss))
         saver.save(sess, FLAGS.save_name)
         print()
