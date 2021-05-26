@@ -145,8 +145,6 @@ if FLAGS.is_train:
     learning_rate = FLAGS.learning_rate
 
     for epoch in range(FLAGS.training_epoch):
-        if epoch % 10 == 0 and epoch > 0:
-            learning_rate /= 10
         epoch_start_time = time.time()
 
         overall_loss = 0.0
