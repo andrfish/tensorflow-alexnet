@@ -73,11 +73,19 @@ def train():
             train_x = train_images[start:end]
             train_y = train_labels[start:end]
             if i % 20 == 0:
+                summary, _, loss_result = sess.run([merged, train, loss], feed_dict={inputs: train_x, labels: train_y,
+                                                                                     dropout_keep_prob: FLAGS.dropout_keep_prob,
+                                                                                     learning_rate: cur_learning_rate})
+
                 summary, accuracy_result, loss_result = sess.run([merged, accuracy, loss], feed_dict={inputs: train_x, labels: train_y,
                                                                                      dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                                      learning_rate: cur_learning_rate})
                 train_writer.add_summary(summary, i)
             else:
+                _, loss_result = sess.run([train, loss], feed_dict={inputs: train_x, labels: train_y,
+                                                                    dropout_keep_prob: FLAGS.dropout_keep_prob,
+                                                                    learning_rate: cur_learning_rate})
+
                 accuracy_result, loss_result = sess.run([train, loss], feed_dict={inputs: train_x, labels: train_y,
                                                                     dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                     learning_rate: cur_learning_rate})
