@@ -86,7 +86,7 @@ def train():
                                                                     dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                     learning_rate: cur_learning_rate})
 
-                accuracy_result, loss_result = sess.run([train, loss], feed_dict={inputs: train_x, labels: train_y,
+                accuracy_result, loss_result = sess.run([accuracy, loss], feed_dict={inputs: train_x, labels: train_y,
                                                                     dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                     learning_rate: cur_learning_rate})
             #print('[%s][training][epoch %d, step %d exec %.2f seconds] [file: %5d ~ %5d / %5d] loss : %3.10f' % (
