@@ -64,6 +64,8 @@ def train():
         if epoch % 10 == 0 and epoch > 0:
             cur_learning_rate /= 10
         epoch_start_time = time.time()
+        
+        overall_loss = 0.0
         for start, end in train_range:
             batch_start_time = time.time()
             train_x = train_images[start:end]
@@ -77,9 +79,10 @@ def train():
                 _, loss_result = sess.run([train, loss], feed_dict={inputs: train_x, labels: train_y,
                                                                     dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                     learning_rate: cur_learning_rate})
-            print('[%s][training][epoch %d, step %d exec %.2f seconds] [file: %5d ~ %5d / %5d] loss : %3.10f' % (
-                time.strftime("%Y-%m-%d %H:%M:%S"), epoch, i, (time.time() - batch_start_time), start, end,
-                total_train_len, loss_result))
+            #print('[%s][training][epoch %d, step %d exec %.2f seconds] [file: %5d ~ %5d / %5d] loss : %3.10f' % (
+            #    time.strftime("%Y-%m-%d %H:%M:%S"), epoch, i, (time.time() - batch_start_time), start, end,
+            #    total_train_len, loss_result))
+            overall_loss += loss_result
 
             if i % FLAGS.validation_interval == 0 and i > 0:
                 validation_start_time = time.time()
@@ -96,9 +99,11 @@ def train():
 
             i += 1
 
-        print("[%s][epoch exec %s seconds] epoch : %d" % (
-            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch))
+        overall_loss /= len(train_range)
+        print("[%s][epoch exec %s seconds] epoch : %d, loss: %3.10f" % (
+            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch, overall_loss))
         saver.save(sess, FLAGS.save_name)
+        print()
     print("[%s][total exec %s seconds" % (time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - total_start_time)))
     train_writer.close()
     validation_writer.close()
@@ -106,7 +111,7 @@ def train():
 
 def test():
     # build graph
-    inputs, labels, dropout_keep_prob, learning_rate = model.input_placeholder(image_size, FLAGS.image_channel,
+    inputs, labels, dropout_keep_prob, learning_rate = model.input_placeholder(image_size, image_channel,
                                                                                label_cnt)
     logits = model.inference(inputs, dropout_keep_prob, label_cnt)
     predict = tf.argmax(logits, 1)

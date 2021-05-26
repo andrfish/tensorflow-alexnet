@@ -139,10 +139,13 @@ if FLAGS.is_train:
     total_train_len = len(train_images)
     i = 0
     learning_rate = FLAGS.learning_rate
+
     for epoch in range(FLAGS.training_epoch):
         if epoch % 10 == 0 and epoch > 0:
             learning_rate /= 10
         epoch_start_time = time.time()
+
+        overall_loss = 0.0
         for start, end in train_range:
             batch_start_time = time.time()
             trainX = train_images[start:end]
@@ -150,9 +153,10 @@ if FLAGS.is_train:
             _, loss_result = sess.run([train, loss], feed_dict={inputs: trainX, labels: trainY,
                                                                 dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                 learning_rate_ph: learning_rate})
-            print('[%s][training][epoch %d, step %d exec %.2f seconds] [file: %5d ~ %5d / %5d] loss : %3.10f' % (
-                time.strftime("%Y-%m-%d %H:%M:%S"), epoch, i, (time.time() - batch_start_time), start, end,
-                total_train_len, loss_result))
+            #print('[%s][training][epoch %d, step %d exec %.2f seconds] [file: %5d ~ %5d / %5d] loss : %3.10f' % (
+            #    time.strftime("%Y-%m-%d %H:%M:%S"), epoch, i, (time.time() - batch_start_time), start, end,
+            #    total_train_len, loss_result))
+            overall_loss += loss_result
 
             if i % FLAGS.validation_interval == 0 and i > 0:
                 validation_start_time = time.time()
@@ -168,9 +172,11 @@ if FLAGS.is_train:
 
             i += 1
 
-        print("[%s][epoch exec %s seconds] epoch : %d" % (
-            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch))
+        overall_loss /= len(train_range)
+        print("[%s][epoch exec %s seconds] epoch : %d, loss: %3.10f"" % (
+            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch, overall_loss))
         saver.save(sess, FLAGS.save_name)
+        print()
 # begin test
 else:
     i = 1
