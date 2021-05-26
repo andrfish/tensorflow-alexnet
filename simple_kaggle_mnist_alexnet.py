@@ -177,7 +177,7 @@ if FLAGS.is_train:
             i += 1
 
         overall_loss /= len(train_range)
-        print("[%s][epoch exec %s seconds] epoch : %d, loss: %3.10f"" % (
+        print("[%s][epoch exec %s seconds] epoch : %d, loss: %3.10f" % (
             time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch + 1, overall_loss))
         saver.save(sess, FLAGS.save_name)
         print()
