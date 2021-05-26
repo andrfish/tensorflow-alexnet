@@ -15,8 +15,8 @@ tf.app.flags.DEFINE_float('dropout_keep_prob', 0.5, "dropout keep prob")
 tf.app.flags.DEFINE_float('learning_rate', 0.001, "learning rate")
 tf.app.flags.DEFINE_float('rms_decay', 0.9, "rms optimizer decay")
 tf.app.flags.DEFINE_float('weight_decay', 0.0005, "l2 regularization weight decay")
-tf.app.flags.DEFINE_string('train_path', '/tmp/train.csv', "path to download training data")
-tf.app.flags.DEFINE_string('test_path', '/tmp/test.csv', "path to download test data")
+tf.app.flags.DEFINE_string('train_path', 'data/train.csv', "path to download training data")
+tf.app.flags.DEFINE_string('test_path', 'data/test.csv', "path to download test data")
 tf.app.flags.DEFINE_integer('validation_size', 2000, "validation size in training data")
 tf.app.flags.DEFINE_string('save_name', os.getcwd() + '/var.ckpt', "path to save variables")
 tf.app.flags.DEFINE_boolean('is_train', True, "True for train, False for test")
@@ -42,9 +42,9 @@ def train():
     sess.run(init)
 
     # ready for summary
-    merged = tf.merge_all_summaries()
-    train_writer = tf.train.SummaryWriter('./summary/train', sess.graph)
-    validation_writer = tf.train.SummaryWriter('./summary/validation')
+    merged = tf.summary.merge_all()
+    train_writer = tf.summary.FileWriter('./summary/train', sess.graph)
+    validation_writer = tf.summary.FileWriter('./summary/validation')
 
     # tf saver
     saver = tf.train.Saver()
@@ -106,9 +106,9 @@ def train():
 
 def test():
     # build graph
-    inputs, labels, dropout_keep_prob, learning_rate = model.input_placeholder(FLAGS.image_size, FLAGS.image_channel,
-                                                                               FLAGS.label_cnt)
-    logits = model.inference(inputs, dropout_keep_prob)
+    inputs, labels, dropout_keep_prob, learning_rate = model.input_placeholder(image_size, FLAGS.image_channel,
+                                                                               label_cnt)
+    logits = model.inference(inputs, dropout_keep_prob, label_cnt)
     predict = tf.argmax(logits, 1)
 
     # session

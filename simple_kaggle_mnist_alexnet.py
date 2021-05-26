@@ -18,8 +18,8 @@ tf.app.flags.DEFINE_float('dropout_keep_prob', 0.5, "dropout keep prob")
 tf.app.flags.DEFINE_float('learning_rate', 0.001, "learning rate")
 tf.app.flags.DEFINE_float('rms_decay', 0.9, "rms optimizer decay")
 tf.app.flags.DEFINE_float('weight_decay', 0.0005, "l2 regularization weight decay")
-tf.app.flags.DEFINE_string('train_path', '/tmp/train.csv', "path to download training data")
-tf.app.flags.DEFINE_string('test_path', '/tmp/test.csv', "path to download test data")
+tf.app.flags.DEFINE_string('train_path', 'data/train.csv', "path to download training data")
+tf.app.flags.DEFINE_string('test_path', 'data/test.csv', "path to download test data")
 tf.app.flags.DEFINE_integer('validation_size', 2000, "validation size in training data")
 tf.app.flags.DEFINE_string('save_name', os.getcwd() + '/var.ckpt', "path to save variables")
 tf.app.flags.DEFINE_boolean('is_train', True, "True for train, False for test")
@@ -98,7 +98,7 @@ fc3 = tf.matmul(fc2_drop, fc3_weights)
 logits = tf.nn.bias_add(fc3, fc3_biases)
 
 # loss
-loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits, labels))
+loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
 # l2 regularization
 regularizers = (tf.nn.l2_loss(conv1_weights) + tf.nn.l2_loss(conv1_biases) +
                 tf.nn.l2_loss(conv2_weights) + tf.nn.l2_loss(conv2_biases) +
