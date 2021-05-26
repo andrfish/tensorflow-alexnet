@@ -48,7 +48,7 @@ def train():
     # ready for summary
     merged = tf.summary.merge_all()
     train_writer = tf.summary.FileWriter('./summary/train', sess.graph)
-    validation_writer = tf.summary.FileWriter('./summary/validation')
+    #validation_writer = tf.summary.FileWriter('./summary/validation')
 
     # tf saver
     saver = tf.train.Saver()
@@ -96,10 +96,10 @@ def train():
                 summary, accuracy_result, loss_result = sess.run([merged, accuracy, loss],
                                                                  feed_dict={inputs: validation_x, labels: validation_y,
                                                                             dropout_keep_prob: 1.0})
-                validation_writer.add_summary(summary, i)
-                print('[%s][validation][epoch %d, step %d exec %.2f seconds] accuracy : %1.3f, loss : %3.10f' % (
-                    time.strftime("%Y-%m-%d %H:%M:%S"), epoch, i, (time.time() - validation_start_time),
-                    accuracy_result, loss_result))
+                #validation_writer.add_summary(summary, i)
+                #print('[%s][validation][epoch %d, step %d exec %.2f seconds] accuracy : %1.3f, loss : %3.10f' % (
+                #    time.strftime("%Y-%m-%d %H:%M:%S"), epoch, i, (time.time() - validation_start_time),
+                #    accuracy_result, loss_result))
 
             i += 1
 
@@ -110,7 +110,7 @@ def train():
         print()
     print("[%s][total exec %s seconds" % (time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - total_start_time)))
     train_writer.close()
-    validation_writer.close()
+    #validation_writer.close()
 
 
 def test():
