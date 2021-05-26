@@ -102,7 +102,7 @@ fc3 = tf.matmul(fc2_drop, fc3_weights)
 logits = tf.nn.bias_add(fc3, fc3_biases)
 
 # loss
-loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=logits, labels=labels))
+loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
 # l2 regularization
 regularizers = (tf.nn.l2_loss(conv1_weights) + tf.nn.l2_loss(conv1_biases) +
                 tf.nn.l2_loss(conv2_weights) + tf.nn.l2_loss(conv2_biases) +
