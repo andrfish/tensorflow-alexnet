@@ -73,12 +73,12 @@ def train():
             train_x = train_images[start:end]
             train_y = train_labels[start:end]
             if i % 20 == 0:
-                summary, accuracy_result, loss_result = sess.run([merged, train, loss], feed_dict={inputs: train_x, labels: train_y,
+                summary, accuracy_result, loss_result = sess.run([merged, accuracy, loss], feed_dict={inputs: train_x, labels: train_y,
                                                                                      dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                                      learning_rate: cur_learning_rate})
                 train_writer.add_summary(summary, i)
             else:
-                accuracy_result, loss_result = sess.run([train, accuracy, loss], feed_dict={inputs: train_x, labels: train_y,
+                accuracy_result, loss_result = sess.run([train, loss], feed_dict={inputs: train_x, labels: train_y,
                                                                     dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                     learning_rate: cur_learning_rate})
             #print('[%s][training][epoch %d, step %d exec %.2f seconds] [file: %5d ~ %5d / %5d] loss : %3.10f' % (
@@ -103,7 +103,7 @@ def train():
 
         overall_accuracy /= len(train_range)
         print("[%s][epoch exec %s seconds] epoch : %d, accuracy: %3.10f" % (
-            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch, overall_loss))
+            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch, overall_accuracy))
         saver.save(sess, FLAGS.save_name)
         print()
     print("[%s][total exec %s seconds" % (time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - total_start_time)))

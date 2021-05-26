@@ -152,7 +152,7 @@ if FLAGS.is_train:
             batch_start_time = time.time()
             trainX = train_images[start:end]
             trainY = train_labels[start:end]
-            accuracy_result, loss_result = sess.run([train, accuracy, loss], feed_dict={inputs: trainX, labels: trainY,
+            accuracy_result, loss_result = sess.run([accuracy, loss], feed_dict={inputs: trainX, labels: trainY,
                                                                 dropout_keep_prob: FLAGS.dropout_keep_prob,
                                                                 learning_rate_ph: learning_rate})
             #print('[%s][training][epoch %d, step %d exec %.2f seconds] [file: %5d ~ %5d / %5d] loss : %3.10f' % (
@@ -176,7 +176,7 @@ if FLAGS.is_train:
 
         overall_accuracy /= len(train_range)
         print("[%s][epoch exec %s seconds] epoch : %d, loss: %3.10f" % (
-            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch + 1, overall_loss))
+            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch + 1, overall_accuracy))
         saver.save(sess, FLAGS.save_name)
         print()
 # begin test
