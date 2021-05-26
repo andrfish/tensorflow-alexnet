@@ -4,6 +4,10 @@ This is simple Alexnet train implementation modified for Kaggle mnist data.
 
 import time
 import tensorflow as tf
+
+import logging
+tf.get_logger().setLevel(logging.ERROR)
+
 import kaggle_mnist_input as loader
 import os
 import csv

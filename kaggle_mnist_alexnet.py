@@ -1,4 +1,8 @@
 import tensorflow as tf
+
+import logging
+tf.get_logger().setLevel(logging.ERROR)
+
 import os
 import kaggle_mnist_alexnet_model as model
 import kaggle_mnist_input as loader
