@@ -102,7 +102,7 @@ fc3 = tf.matmul(fc2_drop, fc3_weights)
 logits = tf.nn.bias_add(fc3, fc3_biases)
 
 # loss
-loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
+loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=logits, labels=labels))
 # l2 regularization
 regularizers = (tf.nn.l2_loss(conv1_weights) + tf.nn.l2_loss(conv1_biases) +
                 tf.nn.l2_loss(conv2_weights) + tf.nn.l2_loss(conv2_biases) +
@@ -170,15 +170,15 @@ if FLAGS.is_train:
                 accuracy_result, loss_result = sess.run([accuracy, loss],
                                                         feed_dict={inputs: validationX, labels: validationY,
                                                                    dropout_keep_prob: 1.0})
-                print('[%s][validation][epoch %d, step %d exec %.2f seconds] accuracy : %1.3f, loss : %3.10f' % (
-                    time.strftime("%Y-%m-%d %H:%M:%S"), epoch, i, (time.time() - validation_start_time),
-                    accuracy_result, loss_result))
+                #print('[%s][validation][epoch %d, step %d exec %.2f seconds] accuracy : %1.3f, loss : %3.10f' % (
+                #    time.strftime("%Y-%m-%d %H:%M:%S"), epoch, i, (time.time() - validation_start_time),
+                #    accuracy_result, loss_result))
 
             i += 1
 
         overall_loss /= len(train_range)
         print("[%s][epoch exec %s seconds] epoch : %d, loss: %3.10f"" % (
-            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch, overall_loss))
+            time.strftime("%Y-%m-%d %H:%M:%S"), (time.time() - epoch_start_time), epoch + 1, overall_loss))
         saver.save(sess, FLAGS.save_name)
         print()
 # begin test
